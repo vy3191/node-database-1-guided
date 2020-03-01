@@ -16,9 +16,9 @@ router.get("/", async (req, res, next) => {
 router.get("/:id", async (req, res, next) => {
       try {
          const id = req.params.id;
-         console.log(id)
-         const post = await db.select("*").from("posts").where("id",req.params.id).limit(1);
-         console.log('line19',post);
+        //  console.log(id)
+         const post = await db.first("*").from("posts").where("id",req.params.id);
+        //  console.log('line19',post);
          res.json(post);
       } catch(err) {
          next(err);
@@ -27,7 +27,13 @@ router.get("/:id", async (req, res, next) => {
 
 router.post("/", async (req, res, next) => {
       try {
-
+        const payload = {
+          title: req.body.title,
+          contents: req.body.contents
+        }
+        const [id] = await db("posts").insert(payload);
+        const newPost  = await db.first("*").from("posts").where("id", id);
+        res.status(201).json(newPost);
       } catch(err) {
          next(err);
       }
