@@ -15,7 +15,11 @@ router.get("/", async (req, res, next) => {
 
 router.get("/:id", async (req, res, next) => {
       try {
-
+         const id = req.params.id;
+         console.log(id)
+         const post = await db.select("*").from("posts").where("id",req.params.id).limit(1);
+         console.log('line19',post);
+         res.json(post);
       } catch(err) {
          next(err);
       }
